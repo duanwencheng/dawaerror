@@ -49,3 +49,6 @@ Thumbs.db
 
 # Vite缓存
 .vite/
+
+# 调试日志
+debug.log
