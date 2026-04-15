@@ -1,11 +1,12 @@
 <template>
   <div id="app">
     <router-view />
+    <AiRobot />
   </div>
 </template>
 
 <script setup>
-// App.vue 根组件
+import AiRobot from './components/AiRobot.vue'
 </script>
 
 <style>
