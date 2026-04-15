@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   {
@@ -39,11 +39,16 @@ const routes = [
     name: 'Todo',
     component: () => import('../views/Todo.vue'),
     meta: { requiresAuth: true }
+  },
+  // 404路由
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/login'
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 
@@ -51,6 +56,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   if (to.meta.requiresAuth && !token) {
+    // 未登录用户访问需要认证的页面，跳转到登录页
     next('/login')
   } else {
     next()
