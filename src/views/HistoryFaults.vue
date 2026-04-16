@@ -119,7 +119,6 @@
     <div class="fault-list">
       <el-table :data="paginatedFaults" style="width: 100%" class="tech-table">
         <el-table-column prop="id" label="ID" width="80" sortable class="table-header"></el-table-column>
-        <el-table-column prop="category" label="分类" sortable class="table-header"></el-table-column>
         <el-table-column prop="meetingDate" label="早会日期" sortable class="table-header"></el-table-column>
         <el-table-column prop="model" label="机型" sortable class="table-header"></el-table-column>
         <el-table-column prop="machineNumber" label="机号" sortable class="table-header"></el-table-column>
@@ -990,5 +989,5 @@ const handleCurrentChange = (current) => {
   .fault-detail {
     padding: 20px;
   }
-}
+}  
 </style>
