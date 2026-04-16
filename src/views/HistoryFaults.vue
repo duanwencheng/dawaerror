@@ -31,8 +31,17 @@
         <el-form-item label="分类">
           <el-select v-model="searchForm.category" placeholder="请选择" class="tech-select">
             <el-option label="国内故障" value="国内故障"></el-option>
-            <el-option label="国际故障" value="国际故障"></el-option>
+            <el-option label="国内投诉" value="国内投诉"></el-option>
             <el-option label="国内巡检" value="国内巡检"></el-option>
+            <el-option label="国际故障" value="国际故障"></el-option>
+            <el-option label="国际投诉" value="国际投诉"></el-option>
+            <el-option label="国际巡检" value="国际巡检"></el-option>
+            <el-option label="特别话题" value="特别话题"></el-option>
+            <el-option label="结构件" value="结构件"></el-option>
+            <el-option label="试验故障" value="试验故障"></el-option>
+            <el-option label="质量升级运动" value="质量升级运动"></el-option>
+            <el-option label="订单差评" value="订单差评"></el-option>
+            <el-option label="客户回访" value="客户回访"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="机型">
@@ -70,7 +79,7 @@
             <el-option label="重庆" value="重庆"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="故障部位3">
+        <el-form-item label="故障部位">
           <el-input v-model="searchForm.faultLocation" placeholder="请输入故障部位" class="tech-input"></el-input>
         </el-form-item>
       </el-form>
