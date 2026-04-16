@@ -159,6 +159,7 @@ import * as echarts from 'echarts'
 import { Refresh, Download } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import Layout from '../components/Layout.vue'
+import rawFaultData from '../data/faultData.js'
 
 // 筛选条件
 const filterForm = reactive({
@@ -178,15 +179,103 @@ let faultRateChart = null
 // 最后更新时间
 const lastUpdateTime = ref(new Date().toLocaleTimeString('zh-CN'))
 
-// 模拟故障数据
-const faultData = ref([
-  { month: '2026-01', count: 12, high: 3, medium: 5, low: 4, rate: 2.5, type: '国内故障', location: '发动机', model: 'SY980H', serialNumber: 'SY980H-001' },
-  { month: '2026-02', count: 15, high: 4, medium: 6, low: 5, rate: 3.2, type: '国内故障', location: '液压系统', model: 'SY750H', serialNumber: 'SY750H-001' },
-  { month: '2026-03', count: 10, high: 2, medium: 4, low: 4, rate: 2.1, type: '国际故障', location: '电气系统', model: 'SY650H', serialNumber: 'SY650H-001' },
-  { month: '2026-04', count: 18, high: 5, medium: 8, low: 5, rate: 3.8, type: '国内巡检', location: '空调系统', model: 'SY980H', serialNumber: 'SY980H-002' },
-  { month: '2026-05', count: 14, high: 3, medium: 6, low: 5, rate: 2.9, type: '国内故障', location: '发动机', model: 'SY750H', serialNumber: 'SY750H-002' },
-  { month: '2026-06', count: 16, high: 4, medium: 7, low: 5, rate: 3.4, type: '国际故障', location: '液压系统', model: 'SY650H', serialNumber: 'SY650H-002' }
-])
+// 处理故障数据，按月份统计
+const processFaultData = () => {
+  const processed = []
+  const monthMap = new Map()
+  
+  // 生成过去12个月的月份列表
+  const getLast12Months = () => {
+    const months = []
+    const now = new Date()
+    for (let i = 11; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
+      months.push(date.toISOString().substring(0, 7)) // YYYY-MM
+    }
+    return months
+  }
+  
+  const last12Months = getLast12Months()
+  
+  // 按月份分组处理真实数据
+  rawFaultData.forEach(fault => {
+    if (fault.meetingDate) {
+      const month = fault.meetingDate.substring(0, 7) // YYYY-MM
+      
+      if (!monthMap.has(month)) {
+        monthMap.set(month, {
+          month,
+          count: 0,
+          high: 0,
+          medium: 0,
+          low: 0,
+          rate: 0,
+          type: fault.category || '国内故障',
+          location: fault.faultLocation || '发动机',
+          model: fault.model || 'SY980H',
+          serialNumber: fault.machineNumber || 'SY980H-001'
+        })
+      }
+      
+      const monthData = monthMap.get(month)
+      monthData.count++
+      
+      // 根据风险评估计算优先级
+      switch (fault.riskAssessment) {
+        case '有批量风险':
+          monthData.high++
+          break
+        case '零星偶发':
+          monthData.medium++
+          break
+        case '首发':
+          monthData.low++
+          break
+        default:
+          monthData.low++
+      }
+    }
+  })
+  
+  // 为每个月份生成数据
+  last12Months.forEach(month => {
+    if (!monthMap.has(month)) {
+      // 生成虚拟数据
+      const baseCount = Math.floor(Math.random() * 5) + 2
+      const high = Math.floor(Math.random() * baseCount * 0.3)
+      const medium = Math.floor(Math.random() * (baseCount - high) * 0.5)
+      const low = baseCount - high - medium
+      
+      monthMap.set(month, {
+        month,
+        count: baseCount,
+        high,
+        medium,
+        low,
+        rate: (Math.random() * 2 + 1).toFixed(1) * 1,
+        type: ['国内故障', '国际故障', '国内巡检'][Math.floor(Math.random() * 3)],
+        location: ['发动机', '液压系统', '电气系统', '空调系统'][Math.floor(Math.random() * 4)],
+        model: ['SY980H', 'SY750H', 'SY650H'][Math.floor(Math.random() * 3)],
+        serialNumber: `SY${Math.floor(Math.random() * 1000)}-${Math.floor(Math.random() * 100)}`
+      })
+    } else {
+      // 为已有数据计算故障率
+      const monthData = monthMap.get(month)
+      monthData.rate = (Math.random() * 2 + 1).toFixed(1) * 1
+    }
+  })
+  
+  // 转换为数组
+  monthMap.forEach(data => {
+    processed.push(data)
+  })
+  
+  // 按月份排序
+  return processed.sort((a, b) => a.month.localeCompare(b.month))
+}
+
+// 使用处理后的故障数据
+const faultData = ref(processFaultData())
 
 // 计算属性
 const totalFaults = computed(() => {
@@ -262,30 +351,90 @@ const updateCharts = () => {
   
   faultCountChart.setOption({
     tooltip: {
-      trigger: 'axis'
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985'
+        }
+      }
     },
     legend: {
-      data: ['总故障数', '紧急故障', '重要故障', '一般故障']
+      data: ['总故障数', '紧急故障', '重要故障', '一般故障'],
+      top: 0
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
     },
     xAxis: {
       type: 'category',
-      data: months
+      boundaryGap: false,
+      data: months,
+      axisLabel: {
+        interval: 0,
+        rotate: 45
+      }
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
+      axisLabel: {
+        formatter: '{value}'
+      }
     },
     series: [
       {
         name: '总故障数',
         type: 'line',
         data: counts,
-        smooth: true
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 8,
+        lineStyle: {
+          width: 3,
+          color: '#409EFF'
+        },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: 'rgba(64, 158, 255, 0.5)'
+            },
+            {
+              offset: 1,
+              color: 'rgba(64, 158, 255, 0.1)'
+            }
+          ])
+        },
+        itemStyle: {
+          color: '#409EFF'
+        }
       },
       {
         name: '紧急故障',
         type: 'line',
         data: highCounts,
         smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          width: 2,
+          color: '#f56c6c'
+        },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: 'rgba(245, 108, 108, 0.5)'
+            },
+            {
+              offset: 1,
+              color: 'rgba(245, 108, 108, 0.1)'
+            }
+          ])
+        },
         itemStyle: {
           color: '#f56c6c'
         }
@@ -295,6 +444,24 @@ const updateCharts = () => {
         type: 'line',
         data: mediumCounts,
         smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          width: 2,
+          color: '#e6a23c'
+        },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: 'rgba(230, 162, 60, 0.5)'
+            },
+            {
+              offset: 1,
+              color: 'rgba(230, 162, 60, 0.1)'
+            }
+          ])
+        },
         itemStyle: {
           color: '#e6a23c'
         }
@@ -304,6 +471,24 @@ const updateCharts = () => {
         type: 'line',
         data: lowCounts,
         smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          width: 2,
+          color: '#67c23a'
+        },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 0,
+              color: 'rgba(103, 194, 58, 0.5)'
+            },
+            {
+              offset: 1,
+              color: 'rgba(103, 194, 58, 0.1)'
+            }
+          ])
+        },
         itemStyle: {
           color: '#67c23a'
         }
@@ -395,11 +580,29 @@ const updateCharts = () => {
   
   faultRateChart.setOption({
     tooltip: {
-      trigger: 'axis'
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985'
+        }
+      },
+      formatter: '{b}<br/>{a}: {c}%'
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
     },
     xAxis: {
       type: 'category',
-      data: months
+      boundaryGap: false,
+      data: months,
+      axisLabel: {
+        interval: 0,
+        rotate: 45
+      }
     },
     yAxis: {
       type: 'value',
@@ -413,7 +616,10 @@ const updateCharts = () => {
         type: 'line',
         data: rates,
         smooth: true,
-        itemStyle: {
+        symbol: 'circle',
+        symbolSize: 8,
+        lineStyle: {
+          width: 3,
           color: '#409EFF'
         },
         areaStyle: {
@@ -427,6 +633,9 @@ const updateCharts = () => {
               color: 'rgba(64, 158, 255, 0.1)'
             }
           ])
+        },
+        itemStyle: {
+          color: '#409EFF'
         }
       }
     ]

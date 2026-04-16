@@ -362,6 +362,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Upload, Refresh } from '@element-plus/icons-vue'
 import { canAddFault } from '../utils/permission'
 import Layout from '../components/Layout.vue'
+import faultData from '../data/faultData.js'
 
 // 用户信息
 const user = ref(JSON.parse(localStorage.getItem('user') || '{}'))
@@ -391,63 +392,8 @@ const importDialogVisible = ref(false)
 const fileList = ref([])
 const importFile = ref(null)
 
-// 模拟故障数据
-const faults = ref([
-  {
-    id: 1,
-    category: '国内故障',
-    meetingDate: '2026-04-09',
-    serviceEngineer: '李四',
-    engineerPhone: '13800138001',
-    company: '大挖',
-    model: 'SY980H',
-    workHours: 1200,
-    machineNumber: 'DW980001',
-    productionDate: '2025-12-15',
-    agent: '新疆京泓',
-    description: '发动机启动困难，需要多次尝试才能启动',
-    responder: '10002',
-    responderName: '王五',
-    faultLocation: '斯堪尼亚+发动机+DC16',
-    isCountermeasured: '对策前',
-    partStatus: '量产',
-    riskAssessment: '有批量风险',
-    rootCause: '燃油系统故障',
-    temporaryCountermeasure: '更换燃油滤清器',
-    longTermCountermeasure: '检查燃油管路，更换老化部件',
-    isClosed: false,
-    investigator: '10003',
-    investigatorName: '赵六',
-    photos: []
-  },
-  {
-    id: 2,
-    category: '国内故障',
-    meetingDate: '2026-04-09',
-    serviceEngineer: '李四',
-    engineerPhone: '13800138001',
-    company: '大挖',
-    model: 'SY750H',
-    workHours: 800,
-    machineNumber: 'DW750002',
-    productionDate: '2026-01-20',
-    agent: '巴西',
-    description: '液压系统压力异常，动作缓慢',
-    responder: '10001',
-    responderName: '张三',
-    faultLocation: '液压系统+主泵',
-    isCountermeasured: '对策中',
-    partStatus: '小批',
-    riskAssessment: '零星偶发',
-    rootCause: '主泵内部泄漏',
-    temporaryCountermeasure: '调整系统压力',
-    longTermCountermeasure: '更换主泵密封件',
-    isClosed: false,
-    investigator: '10001',
-    investigatorName: '张三',
-    photos: []
-  }
-])
+// 使用实际故障数据
+const faults = ref(faultData)
 
 // 新增故障表单
 const newFault = reactive({

@@ -52,3 +52,5 @@ Thumbs.db
 
 # 调试日志
 debug.log
+
+*.xlsx

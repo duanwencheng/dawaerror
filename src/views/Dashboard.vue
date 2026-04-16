@@ -239,7 +239,7 @@
           <el-descriptions-item label="代理商">{{ selectedFault.agent }}</el-descriptions-item>
           <el-descriptions-item label="故障描述" :span="2">{{ selectedFault.description }}</el-descriptions-item>
           <el-descriptions-item label="回复责任人">{{ selectedFault.responderName }}</el-descriptions-item>
-          <el-descriptions-item label="故障部位3">{{ selectedFault.faultLocation }}</el-descriptions-item>
+          <el-descriptions-item label="故障部位">{{ selectedFault.faultLocation }}</el-descriptions-item>
           <el-descriptions-item label="是否对策">{{ selectedFault.isCountermeasured }}</el-descriptions-item>
           <el-descriptions-item label="部品状态">{{ selectedFault.partStatus }}</el-descriptions-item>
           <el-descriptions-item label="故障风险评估">{{ selectedFault.riskAssessment }}</el-descriptions-item>
@@ -276,6 +276,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Refresh, Plus } from '@element-plus/icons-vue'
 import Layout from '../components/Layout.vue'
+import faultData from '../data/faultData.js'
 
 const router = useRouter()
 const currentDate = ref(new Date().toLocaleDateString('zh-CN'))
@@ -284,90 +285,8 @@ const drawerVisible = ref(false)
 const selectedFault = ref(null)
 const refreshTimer = ref(null)
 
-// 模拟故障数据
-const faults = ref([
-  {
-    id: 1,
-    category: '国内故障',
-    meetingDate: '2026-04-09',
-    serviceEngineer: '李四',
-    engineerPhone: '13800138001',
-    company: '大挖',
-    model: 'SY980H',
-    workHours: 1200,
-    machineNumber: 'DW980001',
-    productionDate: '2025-12-15',
-    agent: '新疆京泓',
-    description: '发动机启动困难，需要多次尝试才能启动',
-    responder: '10002',
-    responderName: '王五',
-    faultLocation: '斯堪尼亚+发动机+DC16',
-    isCountermeasured: '对策前',
-    partStatus: '量产',
-    riskAssessment: '有批量风险',
-    rootCause: '燃油系统故障',
-    temporaryCountermeasure: '更换燃油滤清器',
-    longTermCountermeasure: '检查燃油管路，更换老化部件',
-    isClosed: false,
-    investigator: '10003',
-    investigatorName: '赵六',
-    photos: []
-  },
-  {
-    id: 2,
-    category: '国内故障',
-    meetingDate: '2026-04-09',
-    serviceEngineer: '李四',
-    engineerPhone: '13800138001',
-    company: '大挖',
-    model: 'SY750H',
-    workHours: 800,
-    machineNumber: 'DW750002',
-    productionDate: '2026-01-20',
-    agent: '巴西',
-    description: '液压系统压力异常，动作缓慢',
-    responder: '10001',
-    responderName: '张三',
-    faultLocation: '液压系统+主泵',
-    isCountermeasured: '对策中',
-    partStatus: '小批',
-    riskAssessment: '零星偶发',
-    rootCause: '主泵内部泄漏',
-    temporaryCountermeasure: '调整系统压力',
-    longTermCountermeasure: '更换主泵密封件',
-    isClosed: false,
-    investigator: '10001',
-    investigatorName: '张三',
-    photos: []
-  },
-  {
-    id: 3,
-    category: '国内巡检',
-    meetingDate: '2026-04-08',
-    serviceEngineer: '王五',
-    engineerPhone: '13900139001',
-    company: '大挖',
-    model: 'SY980H',
-    workHours: 2000,
-    machineNumber: 'DW980003',
-    productionDate: '2025-10-10',
-    agent: '新疆京泓',
-    description: '空调系统不制冷',
-    responder: '10004',
-    responderName: '钱七',
-    faultLocation: '空调系统+压缩机',
-    isCountermeasured: '对策后',
-    partStatus: '量产',
-    riskAssessment: '首发',
-    rootCause: '压缩机故障',
-    temporaryCountermeasure: '更换压缩机',
-    longTermCountermeasure: '已更换压缩机，系统正常',
-    isClosed: true,
-    investigator: '10004',
-    investigatorName: '钱七',
-    photos: []
-  }
-])
+// 使用实际故障数据
+const faults = ref(faultData)
 
 // 计算属性：按优先级分组故障
 const highPriorityFaultsList = computed(() => {
