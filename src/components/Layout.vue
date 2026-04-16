@@ -27,10 +27,6 @@
           <el-icon><HomeFilled /></el-icon>
           <span>当日故障</span>
         </el-menu-item>
-        <el-menu-item index="/fault-management">
-          <el-icon><Edit /></el-icon>
-          <span>故障管理</span>
-        </el-menu-item>
         <el-menu-item index="/history-faults">
           <el-icon><Document /></el-icon>
           <span>历史故障</span>
@@ -38,6 +34,10 @@
         <el-menu-item index="/trends">
           <el-icon><DataAnalysis /></el-icon>
           <span>故障趋势</span>
+        </el-menu-item>
+        <el-menu-item index="/fault-management">
+          <el-icon><Edit /></el-icon>
+          <span>故障管理</span>
         </el-menu-item>
         <el-menu-item index="/todo">
           <el-icon><Tickets /></el-icon>
