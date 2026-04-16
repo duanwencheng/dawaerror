@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-card">
       <div class="logo">
-        <h1>大挖故障调查系统</h1>
+        <h1>大挖故障追踪系统</h1>
         <p>故障管理与分析平台</p>
       </div>
       <div class="login-btn">

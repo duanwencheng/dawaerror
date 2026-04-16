@@ -84,7 +84,7 @@ const isActive = ref(false)
 const isHidden = ref(false)
 const inputMessage = ref('')
 const messages = ref([
-  { text: '你好！我是大挖故障调查系统的AI助手，有什么可以帮助您的吗？', isUser: false }
+  { text: '你好！我是大挖故障追踪系统的AI助手，有什么可以帮助您的吗？', isUser: false }
 ])
 // 固定位置在右下角
 const position = ref({ x: 80, y: 80 })

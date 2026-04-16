@@ -4,7 +4,7 @@
     <div class="sidebar" :class="{ 'sidebar-collapsed': isCollapsed }">
       <div class="sidebar-header">
         <h1 class="logo" :class="{ 'logo-collapsed': isCollapsed }">
-          {{ isCollapsed ? '大挖' : '大挖故障调查系统' }}
+          {{ isCollapsed ? '大挖' : '大挖故障追踪系统' }}
         </h1>
         <el-button type="text" class="collapse-btn" @click="toggleSidebar">
           <el-icon>
