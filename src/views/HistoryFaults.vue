@@ -50,6 +50,16 @@
         <el-form-item label="机号">
           <el-input v-model="searchForm.machineNumber" placeholder="请输入机号" class="tech-input"></el-input>
         </el-form-item>
+        <el-form-item label="生产日期">
+          <el-date-picker
+            v-model="searchForm.productionDate"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            class="tech-date-picker"
+          ></el-date-picker>
+        </el-form-item>
         <el-form-item label="服务工程师">
           <el-input v-model="searchForm.serviceEngineer" placeholder="请输入服务工程师" class="tech-input"></el-input>
         </el-form-item>
@@ -122,6 +132,7 @@
         <el-table-column prop="meetingDate" label="早会日期" sortable class="table-header"></el-table-column>
         <el-table-column prop="model" label="机型" sortable class="table-header"></el-table-column>
         <el-table-column prop="machineNumber" label="机号" sortable class="table-header"></el-table-column>
+        <el-table-column prop="productionDate" label="生产日期" sortable class="table-header"></el-table-column>
         <el-table-column prop="description" label="故障描述" show-overflow-tooltip class="table-header"></el-table-column>
         <el-table-column prop="serviceEngineer" label="服务工程师" sortable class="table-header"></el-table-column>
         <el-table-column prop="responderName" label="责任人" class="table-header"></el-table-column>
@@ -236,6 +247,7 @@ const searchForm = reactive({
   category: '',
   model: '',
   machineNumber: '',
+  productionDate: [],
   serviceEngineer: '',
   isCountermeasured: '',
   riskAssessment: '',
@@ -412,8 +424,16 @@ const filteredFaults = computed(() => {
   if (searchForm.machineNumber) {
     result = result.filter(fault => fault.machineNumber.includes(searchForm.machineNumber))
   }
-  
-  // 按服务工程师过滤
+
+  if (searchForm.productionDate && searchForm.productionDate.length === 2) {
+    const startDate = new Date(searchForm.productionDate[0])
+    const endDate = new Date(searchForm.productionDate[1])
+    result = result.filter(fault => {
+      const faultDate = new Date(fault.productionDate)
+      return faultDate >= startDate && faultDate <= endDate
+    })
+  }
+
   if (searchForm.serviceEngineer) {
     result = result.filter(fault => fault.serviceEngineer.includes(searchForm.serviceEngineer))
   }
