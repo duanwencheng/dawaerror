@@ -16,140 +16,147 @@
         </div>
       </div>
 
-    <!-- 故障图片轮播 -->
-    <div class="carousel-section">
-      <el-carousel :interval="5000" type="card" height="300px" indicator-position="outside">
-        <el-carousel-item v-for="(item, index) in carouselImages" :key="index">
-          <div class="carousel-item">
-            <div class="image-container" @click="previewImage(item)">
-              <img :src="item.src" :alt="item.alt" class="carousel-image" />
-              <div class="zoom-icon"><i class="el-icon-zoom-in"></i></div>
+      <!-- 故障图片轮播 -->
+      <div class="carousel-section">
+        <el-carousel :interval="5000" type="card" height="300px" indicator-position="outside">
+          <el-carousel-item v-for="(item, index) in carouselImages" :key="index">
+            <div class="carousel-item">
+              <div class="image-container" @click="previewImage(item, index)">
+                <img :src="item.src" :alt="item.alt" class="carousel-image" />
+                <div class="zoom-icon"><i class="el-icon-zoom-in"></i></div>
+              </div>
+              <div class="carousel-caption">{{ item.caption }}</div>
             </div>
-            <div class="carousel-caption">{{ item.caption }}</div>
-          </div>
-        </el-carousel-item>
-      </el-carousel>
-    </div>
-
-    <!-- 图片预览对话框 -->
-    <el-dialog
-      v-model="dialogVisible"
-      :title="previewImageCaption"
-      width="80%"
-      top="10vh"
-    >
-      <div class="preview-container">
-        <el-image
-          :src="previewImageUrl"
-          fit="contain"
-          class="preview-image"
-        />
+          </el-carousel-item>
+        </el-carousel>
       </div>
-    </el-dialog>
 
-    <!-- 故障卡片展示 -->
-    <div class="fault-sections">
-      <!-- 所有故障卡片放在同一行 -->
-      <div class="fault-section">
-        <div class="section-header info">
-          <div class="section-icon"><i class="el-icon-info"></i></div>
-          <div class="stats-info">
-            <span class="stat-item">总故障数: {{ categoryStats.total }}</span>
-            <span v-for="(count, category) in categoryStats.categories" :key="category" class="stat-item">
-              {{ category }}: {{ count }}
-            </span>
+      <!-- 图片预览对话框 -->
+      <el-dialog
+        v-model="dialogVisible"
+        :title="previewImageCaption"
+        width="80%"
+        top="10vh"
+      >
+        <div class="preview-container" @click="handleImageClick">
+          <div class="preview-controls">
+            <el-button type="text" @click.stop="prevImage" class="control-btn left">
+              <i class="el-icon-arrow-left"></i>
+            </el-button>
+            <el-button type="text" @click.stop="nextImage" class="control-btn right">
+              <i class="el-icon-arrow-right"></i>
+            </el-button>
           </div>
+          <el-image
+            :src="previewImageUrl"
+            fit="contain"
+            class="preview-image"
+          />
         </div>
-        <div class="fault-cards">
-          <div 
-            v-for="fault in faults" 
-            :key="fault.id"
-            class="fault-card info"
-            :class="{ 'unclosed': !fault.isClosed }"
-            @click="showFaultDetail(fault)"
-          >
-            <div class="card-header">
-              <div class="machine-info">
-                <div class="model">{{ fault.model }}</div>
-                <div class="machine-number">{{ fault.machineNumber }}</div>
-              </div>
-              <span class="priority">{{ fault.category }}</span>
-            </div>
-            <div class="card-body">
-              <div class="fault-description">{{ fault.description }}</div>
-              <div class="fault-meta">
-                <div class="meta-item">
-                  <i class="el-icon-user"></i>
-                  <span>{{ fault.responderName }}</span>
-                </div>
-                <div class="meta-item">
-                  <i class="el-icon-time"></i>
-                  <span>{{ fault.meetingDate }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer">
-              <span class="status" :class="{ 'closed': fault.isClosed, 'unclosed': !fault.isClosed }">
-                {{ fault.isClosed ? '已闭环' : '未闭环' }}
+      </el-dialog>
+
+      <!-- 故障卡片展示 -->
+      <div class="fault-sections">
+        <!-- 所有故障卡片放在同一行 -->
+        <div class="fault-section">
+          <div class="section-header info">
+            <div class="stats-info">
+              <span class="stat-item">总故障数: {{ categoryStats.total }}</span>
+              <span v-for="(count, category) in categoryStats.categories" :key="category" class="stat-item">
+                {{ category }}: {{ count }}
               </span>
-              <el-button type="text" size="small" @click.stop="showFaultDetail(fault)">
-                查看详情
-              </el-button>
             </div>
-            <div class="card-glow"></div>
+          </div>
+          <div class="fault-cards">
+            <div 
+              v-for="fault in faults" 
+              :key="fault.id"
+              class="fault-card info"
+              :class="{ 'unclosed': !fault.isClosed }"
+              @click="showFaultDetail(fault)"
+            >
+              <div class="card-header">
+                <div class="machine-info">
+                  <div class="model">{{ fault.model }}</div>
+                  <div class="machine-number">{{ fault.machineNumber }}</div>
+                </div>
+                <span class="priority">{{ fault.category }}</span>
+              </div>
+              <div class="card-body">
+                <div class="fault-description">{{ fault.description }}</div>
+                <div class="fault-meta">
+                  <div class="meta-item">
+                    <i class="el-icon-user"></i>
+                    <span>{{ fault.responderName }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <i class="el-icon-time"></i>
+                    <span>{{ fault.meetingDate }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <span class="status" :class="{ 'closed': fault.isClosed, 'unclosed': !fault.isClosed }">
+                  {{ fault.isClosed ? '已闭环' : '未闭环' }}
+                </span>
+                <el-button type="text" size="small" @click.stop="showFaultDetail(fault)">
+                  查看详情
+                </el-button>
+              </div>
+              <div class="card-glow"></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- 故障详情抽屉 -->
-    <el-drawer
-      v-model="drawerVisible"
-      title="故障详情"
-      size="70%"
-    >
-      <div v-if="selectedFault" class="fault-detail">
-        <el-descriptions :column="2" border>
-          <el-descriptions-item label="分类">{{ selectedFault.category }}</el-descriptions-item>
-          <el-descriptions-item label="早会日期">{{ selectedFault.meetingDate }}</el-descriptions-item>
-          <el-descriptions-item label="服务工程师">{{ selectedFault.serviceEngineer }}</el-descriptions-item>
-          <el-descriptions-item label="工程师电话">{{ selectedFault.engineerPhone }}</el-descriptions-item>
-          <el-descriptions-item label="公司">{{ selectedFault.company }}</el-descriptions-item>
-          <el-descriptions-item label="机型">{{ selectedFault.model }}</el-descriptions-item>
-          <el-descriptions-item label="工作小时">{{ selectedFault.workHours }}</el-descriptions-item>
-          <el-descriptions-item label="机号">{{ selectedFault.machineNumber }}</el-descriptions-item>
-          <el-descriptions-item label="生产日期">{{ selectedFault.productionDate }}</el-descriptions-item>
-          <el-descriptions-item label="代理商">{{ selectedFault.agent }}</el-descriptions-item>
-          <el-descriptions-item label="故障描述" :span="2">{{ selectedFault.description }}</el-descriptions-item>
-          <el-descriptions-item label="回复责任人">{{ selectedFault.responderName }}</el-descriptions-item>
-          <el-descriptions-item label="故障部位">{{ selectedFault.faultLocation }}</el-descriptions-item>
-          <el-descriptions-item label="是否对策">{{ selectedFault.isCountermeasured }}</el-descriptions-item>
-          <el-descriptions-item label="部品状态">{{ selectedFault.partStatus }}</el-descriptions-item>
-          <el-descriptions-item label="故障风险评估">{{ selectedFault.riskAssessment }}</el-descriptions-item>
-          <el-descriptions-item label="整机生产地">{{ selectedFault.productionSite }}</el-descriptions-item>
-          <el-descriptions-item label="原因分析" :span="2">{{ selectedFault.rootCause }}</el-descriptions-item>
-          <el-descriptions-item label="临时对策" :span="2">{{ selectedFault.temporaryCountermeasure }}</el-descriptions-item>
-          <el-descriptions-item label="长久对策及进展" :span="2">{{ selectedFault.longTermCountermeasure }}</el-descriptions-item>
-          <el-descriptions-item label="是否闭环">{{ selectedFault.isClosed ? '是' : '否' }}</el-descriptions-item>
-          <el-descriptions-item label="调查人">{{ selectedFault.investigatorName }}</el-descriptions-item>
-        </el-descriptions>
-        
-        <!-- 故障照片 -->
-        <div v-if="selectedFault.photos && selectedFault.photos.length > 0" class="fault-photos">
-          <h3>故障照片</h3>
-          <div class="photo-grid">
-            <div v-for="(photo, index) in selectedFault.photos" :key="index" class="photo-item">
-              <el-image
-                :src="photo"
-                fit="cover"
-                style="width: 200px; height: 150px"
-                preview-src-list="[photo]"
-              />
+      <!-- 故障详情抽屉 -->
+      <el-drawer
+        v-model="drawerVisible"
+        title="故障详情"
+        size="70%"
+      >
+        <div v-if="selectedFault" class="fault-detail">
+          <el-descriptions :column="2" border>
+            <el-descriptions-item label="分类">{{ selectedFault.category }}</el-descriptions-item>
+            <el-descriptions-item label="早会日期">{{ selectedFault.meetingDate }}</el-descriptions-item>
+            <el-descriptions-item label="服务工程师">{{ selectedFault.serviceEngineer }}</el-descriptions-item>
+            <el-descriptions-item label="工程师电话">{{ selectedFault.engineerPhone }}</el-descriptions-item>
+            <el-descriptions-item label="公司">{{ selectedFault.company }}</el-descriptions-item>
+            <el-descriptions-item label="机型">{{ selectedFault.model }}</el-descriptions-item>
+            <el-descriptions-item label="工作小时">{{ selectedFault.workHours }}</el-descriptions-item>
+            <el-descriptions-item label="机号">{{ selectedFault.machineNumber }}</el-descriptions-item>
+            <el-descriptions-item label="生产日期">{{ selectedFault.productionDate }}</el-descriptions-item>
+            <el-descriptions-item label="代理商">{{ selectedFault.agent }}</el-descriptions-item>
+            <el-descriptions-item label="故障描述" :span="2">{{ selectedFault.description }}</el-descriptions-item>
+            <el-descriptions-item label="回复责任人">{{ selectedFault.responderName }}</el-descriptions-item>
+            <el-descriptions-item label="故障部位">{{ selectedFault.faultLocation }}</el-descriptions-item>
+            <el-descriptions-item label="是否对策">{{ selectedFault.isCountermeasured }}</el-descriptions-item>
+            <el-descriptions-item label="部品状态">{{ selectedFault.partStatus }}</el-descriptions-item>
+            <el-descriptions-item label="故障风险评估">{{ selectedFault.riskAssessment }}</el-descriptions-item>
+            <el-descriptions-item label="整机生产地">{{ selectedFault.productionSite }}</el-descriptions-item>
+            <el-descriptions-item label="原因分析" :span="2">{{ selectedFault.rootCause }}</el-descriptions-item>
+            <el-descriptions-item label="临时对策" :span="2">{{ selectedFault.temporaryCountermeasure }}</el-descriptions-item>
+            <el-descriptions-item label="长久对策及进展" :span="2">{{ selectedFault.longTermCountermeasure }}</el-descriptions-item>
+            <el-descriptions-item label="是否闭环">{{ selectedFault.isClosed ? '是' : '否' }}</el-descriptions-item>
+            <el-descriptions-item label="调查人">{{ selectedFault.investigatorName }}</el-descriptions-item>
+          </el-descriptions>
+          
+          <!-- 故障照片 -->
+          <div v-if="selectedFault.photos && selectedFault.photos.length > 0" class="fault-photos">
+            <h3>故障照片</h3>
+            <div class="photo-grid">
+              <div v-for="(photo, index) in selectedFault.photos" :key="index" class="photo-item">
+                <el-image
+                  :src="photo"
+                  fit="cover"
+                  style="width: 200px; height: 150px"
+                  preview-src-list="[photo]"
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </el-drawer>
+      </el-drawer>
     </div>
   </Layout>
 </template>
@@ -170,6 +177,7 @@ const refreshTimer = ref(null)
 const dialogVisible = ref(false)
 const previewImageUrl = ref('')
 const previewImageCaption = ref('')
+const currentImageIndex = ref(0)
 
 // 使用实际故障数据，只取前三条作为当日故障
 const faults = ref(faultData.slice(0, 3))
@@ -212,10 +220,44 @@ const categoryStats = computed(() => {
 })
 
 // 预览图片
-const previewImage = (item) => {
+const previewImage = (item, index) => {
+  currentImageIndex.value = index
   previewImageUrl.value = item.src
   previewImageCaption.value = item.caption
   dialogVisible.value = true
+}
+
+// 切换到上一张图片
+const prevImage = () => {
+  currentImageIndex.value = (currentImageIndex.value - 1 + carouselImages.value.length) % carouselImages.value.length
+  const prevItem = carouselImages.value[currentImageIndex.value]
+  previewImageUrl.value = prevItem.src
+  previewImageCaption.value = prevItem.caption
+}
+
+// 切换到下一张图片
+const nextImage = () => {
+  currentImageIndex.value = (currentImageIndex.value + 1) % carouselImages.value.length
+  const nextItem = carouselImages.value[currentImageIndex.value]
+  previewImageUrl.value = nextItem.src
+  previewImageCaption.value = nextItem.caption
+}
+
+// 处理图片点击，根据点击位置切换到上一张或下一张
+const handleImageClick = (event) => {
+  const container = event.currentTarget
+  const rect = container.getBoundingClientRect()
+  const clickX = event.clientX - rect.left
+  const containerWidth = rect.width
+  
+  // 如果点击左侧30%区域，显示上一张
+  if (clickX < containerWidth * 0.3) {
+    prevImage()
+  }
+  // 如果点击右侧30%区域，显示下一张
+  else if (clickX > containerWidth * 0.7) {
+    nextImage()
+  }
 }
 
 // 显示故障详情
@@ -937,5 +979,61 @@ onUnmounted(() => {
   .photo-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* 预览图片样式 */
+.preview-container {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.preview-controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.control-btn {
+  pointer-events: auto;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+
+.control-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+  transform: scale(1.1);
+}
+
+.control-btn.left {
+  align-self: center;
+}
+
+.control-btn.right {
+  align-self: center;
 }
 </style>
