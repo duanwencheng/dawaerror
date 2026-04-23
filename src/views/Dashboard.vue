@@ -1016,22 +1016,22 @@ onUnmounted(() => {
 
 .control-btn {
   pointer-events: auto;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   background: transparent;
-  color: white;
+  color: #409eff;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 20px;
-  font-size: 24px;
+  font-size: 32px;
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
 }
 
 .control-btn:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(64, 158, 255, 0.2);
   transform: scale(1.1);
 }
 
