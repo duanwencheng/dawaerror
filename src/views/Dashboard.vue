@@ -16,166 +16,53 @@
         </div>
       </div>
 
-    <!-- 故障统计 -->
-    <div class="stats">
-      <div class="stat-item">
-        <div class="stat-icon"><i class="el-icon-data-analysis"></i></div>
-        <div class="stat-content">
-          <div class="stat-value">{{ totalFaults }}</div>
-          <div class="stat-label">总故障数</div>
-        </div>
-        <div class="stat-bg"></div>
-      </div>
-      <div class="stat-item warning">
-        <div class="stat-icon"><i class="el-icon-warning"></i></div>
-        <div class="stat-content">
-          <div class="stat-value">{{ highPriorityFaults }}</div>
-          <div class="stat-label">紧急故障</div>
-        </div>
-        <div class="stat-bg"></div>
-      </div>
-      <div class="stat-item info">
-        <div class="stat-icon"><i class="el-icon-s-flag"></i></div>
-        <div class="stat-content">
-          <div class="stat-value">{{ mediumPriorityFaults }}</div>
-          <div class="stat-label">重要故障</div>
-        </div>
-        <div class="stat-bg"></div>
-      </div>
-      <div class="stat-item success">
-        <div class="stat-icon"><i class="el-icon-s-check"></i></div>
-        <div class="stat-content">
-          <div class="stat-value">{{ lowPriorityFaults }}</div>
-          <div class="stat-label">一般故障</div>
-        </div>
-        <div class="stat-bg"></div>
-      </div>
-      <div class="stat-item danger">
-        <div class="stat-icon"><i class="el-icon-s-close"></i></div>
-        <div class="stat-content">
-          <div class="stat-value">{{ unclosedFaults }}</div>
-          <div class="stat-label">未闭环故障</div>
-        </div>
-        <div class="stat-bg"></div>
-      </div>
+    <!-- 故障图片轮播 -->
+    <div class="carousel-section">
+      <el-carousel :interval="5000" type="card" height="300px" indicator-position="outside">
+        <el-carousel-item v-for="(item, index) in carouselImages" :key="index">
+          <div class="carousel-item">
+            <div class="image-container" @click="previewImage(item)">
+              <img :src="item.src" :alt="item.alt" class="carousel-image" />
+              <div class="zoom-icon"><i class="el-icon-zoom-in"></i></div>
+            </div>
+            <div class="carousel-caption">{{ item.caption }}</div>
+          </div>
+        </el-carousel-item>
+      </el-carousel>
     </div>
+
+    <!-- 图片预览对话框 -->
+    <el-dialog
+      v-model="dialogVisible"
+      :title="previewImageCaption"
+      width="80%"
+      top="10vh"
+    >
+      <div class="preview-container">
+        <el-image
+          :src="previewImageUrl"
+          fit="contain"
+          class="preview-image"
+        />
+      </div>
+    </el-dialog>
 
     <!-- 故障卡片展示 -->
     <div class="fault-sections">
-      <!-- 紧急故障 -->
-      <div class="fault-section">
-        <div class="section-header danger">
-          <div class="section-icon"><i class="el-icon-warning"></i></div>
-          <h2>紧急故障</h2>
-          <span class="count">{{ highPriorityFaults }}</span>
-        </div>
-        <div class="fault-cards">
-          <div 
-            v-for="fault in highPriorityFaultsList" 
-            :key="fault.id"
-            class="fault-card danger"
-            :class="{ 'unclosed': !fault.isClosed }"
-            @click="showFaultDetail(fault)"
-          >
-            <div class="card-header">
-              <div class="machine-info">
-                <div class="model">{{ fault.model }}</div>
-                <div class="machine-number">{{ fault.machineNumber }}</div>
-              </div>
-              <span class="priority">高</span>
-            </div>
-            <div class="card-body">
-              <div class="fault-description">{{ fault.description }}</div>
-              <div class="fault-meta">
-                <div class="meta-item">
-                  <i class="el-icon-user"></i>
-                  <span>{{ fault.responderName }}</span>
-                </div>
-                <div class="meta-item">
-                  <i class="el-icon-time"></i>
-                  <span>{{ fault.meetingDate }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer">
-              <span class="status" :class="{ 'closed': fault.isClosed, 'unclosed': !fault.isClosed }">
-                {{ fault.isClosed ? '已闭环' : '未闭环' }}
-              </span>
-              <el-button type="text" size="small" @click.stop="showFaultDetail(fault)">
-                查看详情
-              </el-button>
-            </div>
-            <div class="card-glow"></div>
-          </div>
-          <div v-if="highPriorityFaultsList.length === 0" class="empty-card">
-            <div class="empty-icon"><i class="el-icon-s-success"></i></div>
-            <div class="empty-text">暂无紧急故障</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 重要故障 -->
-      <div class="fault-section">
-        <div class="section-header warning">
-          <div class="section-icon"><i class="el-icon-s-flag"></i></div>
-          <h2>重要故障</h2>
-          <span class="count">{{ mediumPriorityFaults }}</span>
-        </div>
-        <div class="fault-cards">
-          <div 
-            v-for="fault in mediumPriorityFaultsList" 
-            :key="fault.id"
-            class="fault-card warning"
-            :class="{ 'unclosed': !fault.isClosed }"
-            @click="showFaultDetail(fault)"
-          >
-            <div class="card-header">
-              <div class="machine-info">
-                <div class="model">{{ fault.model }}</div>
-                <div class="machine-number">{{ fault.machineNumber }}</div>
-              </div>
-              <span class="priority">中</span>
-            </div>
-            <div class="card-body">
-              <div class="fault-description">{{ fault.description }}</div>
-              <div class="fault-meta">
-                <div class="meta-item">
-                  <i class="el-icon-user"></i>
-                  <span>{{ fault.responderName }}</span>
-                </div>
-                <div class="meta-item">
-                  <i class="el-icon-time"></i>
-                  <span>{{ fault.meetingDate }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer">
-              <span class="status" :class="{ 'closed': fault.isClosed, 'unclosed': !fault.isClosed }">
-                {{ fault.isClosed ? '已闭环' : '未闭环' }}
-              </span>
-              <el-button type="text" size="small" @click.stop="showFaultDetail(fault)">
-                查看详情
-              </el-button>
-            </div>
-            <div class="card-glow"></div>
-          </div>
-          <div v-if="mediumPriorityFaultsList.length === 0" class="empty-card">
-            <div class="empty-icon"><i class="el-icon-s-success"></i></div>
-            <div class="empty-text">暂无重要故障</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 一般故障 -->
+      <!-- 所有故障卡片放在同一行 -->
       <div class="fault-section">
         <div class="section-header info">
           <div class="section-icon"><i class="el-icon-info"></i></div>
-          <h2>一般故障</h2>
-          <span class="count">{{ lowPriorityFaults }}</span>
+          <div class="stats-info">
+            <span class="stat-item">总故障数: {{ categoryStats.total }}</span>
+            <span v-for="(count, category) in categoryStats.categories" :key="category" class="stat-item">
+              {{ category }}: {{ count }}
+            </span>
+          </div>
         </div>
         <div class="fault-cards">
           <div 
-            v-for="fault in lowPriorityFaultsList" 
+            v-for="fault in faults" 
             :key="fault.id"
             class="fault-card info"
             :class="{ 'unclosed': !fault.isClosed }"
@@ -186,7 +73,7 @@
                 <div class="model">{{ fault.model }}</div>
                 <div class="machine-number">{{ fault.machineNumber }}</div>
               </div>
-              <span class="priority">低</span>
+              <span class="priority">{{ fault.category }}</span>
             </div>
             <div class="card-body">
               <div class="fault-description">{{ fault.description }}</div>
@@ -210,10 +97,6 @@
               </el-button>
             </div>
             <div class="card-glow"></div>
-          </div>
-          <div v-if="lowPriorityFaultsList.length === 0" class="empty-card">
-            <div class="empty-icon"><i class="el-icon-s-success"></i></div>
-            <div class="empty-text">暂无一般故障</div>
           </div>
         </div>
       </div>
@@ -284,29 +167,56 @@ const lastUpdateTime = ref(new Date().toLocaleTimeString('zh-CN'))
 const drawerVisible = ref(false)
 const selectedFault = ref(null)
 const refreshTimer = ref(null)
+const dialogVisible = ref(false)
+const previewImageUrl = ref('')
+const previewImageCaption = ref('')
 
-// 使用实际故障数据
-const faults = ref(faultData)
+// 使用实际故障数据，只取前三条作为当日故障
+const faults = ref(faultData.slice(0, 3))
 
-// 计算属性：按优先级分组故障
-const highPriorityFaultsList = computed(() => {
-  return faults.value.filter(fault => fault.riskAssessment === '有批量风险')
+// 轮播图片数据
+const carouselImages = ref([
+  {
+    src: '/src/assets/2.png',
+    alt: '故障图片1',
+    caption: '支重轮螺栓损坏'
+  },
+  {
+    src: '/src/assets/3-1.png',
+    alt: '故障图片2',
+    caption: '侧门焊点凹凸不平'
+  },
+  {
+    src: '/src/assets/3-2.png',
+    alt: '故障图片3',
+    caption: '驾驶室后盖板边角与螺栓干涉，将板往下折'
+  }
+])
+
+// 按category分组故障并统计数量
+const categoryStats = computed(() => {
+  const stats = {
+    total: faults.value.length,
+    categories: {}
+  }
+  
+  faults.value.forEach(fault => {
+    const category = fault.category || '未分类'
+    if (!stats.categories[category]) {
+      stats.categories[category] = 0
+    }
+    stats.categories[category]++
+  })
+  
+  return stats
 })
 
-const mediumPriorityFaultsList = computed(() => {
-  return faults.value.filter(fault => fault.riskAssessment === '零星偶发')
-})
-
-const lowPriorityFaultsList = computed(() => {
-  return faults.value.filter(fault => fault.riskAssessment === '首发')
-})
-
-// 统计数据
-const totalFaults = computed(() => faults.value.length)
-const highPriorityFaults = computed(() => highPriorityFaultsList.value.length)
-const mediumPriorityFaults = computed(() => mediumPriorityFaultsList.value.length)
-const lowPriorityFaults = computed(() => lowPriorityFaultsList.value.length)
-const unclosedFaults = computed(() => faults.value.filter(fault => !fault.isClosed).length)
+// 预览图片
+const previewImage = (item) => {
+  previewImageUrl.value = item.src
+  previewImageCaption.value = item.caption
+  dialogVisible.value = true
+}
 
 // 显示故障详情
 const showFaultDetail = (fault) => {
@@ -533,6 +443,96 @@ onUnmounted(() => {
   background: linear-gradient(135deg, rgba(103, 194, 58, 0.1), rgba(103, 194, 58, 0.05));
 }
 
+/* 轮播图样式 */
+.carousel-section {
+  margin-bottom: 30px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.carousel-item {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.image-container:hover .carousel-image {
+  transform: scale(1.05);
+}
+
+.zoom-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.image-container:hover .zoom-icon {
+  opacity: 1;
+}
+
+.carousel-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* 图片预览样式 */
+.preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  max-height: 70vh;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 60vh;
+  cursor: zoom-in;
+}
+
 /* 故障区域样式 */
 .fault-sections {
   display: flex;
@@ -596,13 +596,19 @@ onUnmounted(() => {
   flex: 1;
 }
 
-.count {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 14px;
+/* 统计信息样式 */
+.stats-info {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.stat-item {
+  font-size: 18px;
   font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #409eff;
+  margin-left: 10px;
 }
 
 /* 故障卡片样式 */

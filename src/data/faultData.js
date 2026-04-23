@@ -2,6 +2,87 @@
 const faultData = [
   {
     "id": 1,
+    "category": "特别话题",
+    "meetingDate": "2026-04-24",
+    "serviceEngineer": "",
+    "engineerPhone": "",
+    "company": "矿挖",
+    "model": "SY1250H",
+    "workHours": 0,
+    "machineNumber": "",
+    "productionDate": "",
+    "agent": "奥伦堡",
+    "description": "奥伦堡大客户 SY1250H 设备发生三起铲斗油缸故障，客户怀疑油缸质量差，将会对油缸材质进行检测。恒立反馈油缸材质为30CrMo, Tpas代理商服务总监反馈，合资品牌CAT/CASE/KUMATSU等都是使用42CrMo。且客户采购主机价格及单独采购油缸价格并不低，可以买到更高材质的油缸，客户对此会产生严重抱怨请矿挖研究院调查故障原因提供解决方案。",
+    "responder": "10001",
+    "responderName": "白仲斌",
+    "faultLocation": "",
+    "isCountermeasured": "",
+    "partStatus": "",
+    "riskAssessment": "",
+    "rootCause": "",
+    "temporaryCountermeasure": "",
+    "longTermCountermeasure": "",
+    "isClosed": false,
+    "investigator": "10001",
+    "investigatorName": "空",
+    "photos": []
+  },
+  {
+    "id": 2,
+    "category": "国际故障",
+    "meetingDate": "2026-04-24",
+    "serviceEngineer": "施武",
+    "engineerPhone": "",
+    "company": "大挖",
+    "model": "SY375",
+    "workHours": 5889,
+    "machineNumber": "SY037CFV025C8",
+    "productionDate": "2025-02-15",
+    "agent": "老挝",
+    "description": "支重轮螺栓损坏，更换螺栓修复。",
+    "responder": "10001",
+    "responderName": "马先锋",
+    "faultLocation": "奥达科+螺栓+M20×100",
+    "isCountermeasured": "对策前",
+    "partStatus": "量产",
+    "riskAssessment": "零星偶发",
+    "rootCause": "1起，对策后共生产1000多台，故障率0.1%",
+    "temporaryCountermeasure": "重庆",
+    "longTermCountermeasure": "\n①现场对车架平面度、螺纹质量、螺纹胶等进行排查无异常②工艺变化，2020年5月之前用风炮拧紧，之后改为拧紧机，可能工艺的变化对螺栓力矩产生影响（SY375拉取近4年共45起故障数据，20年5月之前生产的故障机器只有1台客户也反馈国三机不断",
+    "isClosed": false,
+    "investigator": "10001",
+    "investigatorName": "马先锋",
+    "photos": []
+  },
+  {
+    "id": 3,
+    "category": "国际巡检",
+    "meetingDate": "2026-04-24",
+    "serviceEngineer": "",
+    "engineerPhone": "",
+    "company": "大挖",
+    "model": "SY365H\nSY550HB-S",
+    "workHours": 0,
+    "machineNumber": "SYK11036JT3C00898\nSYK11036VT3C00967\nSYK11055CT4C00108",
+    "productionDate": "",
+    "agent": "",
+    "description": "1、机型：SY365H 机号：SYK11036JT3C00898*\n侧门焊点凹凸不平，侧门焊点周围明显凹陷。\n2、机型：SY365H 机号：SYK11036VT3C00967*\n散热器海绵粘贴不规范，高低不平。\n3.\n机型：SY550HB-S 机号：SYK11055CT4C00108*\n③发动机后处理器支架螺栓太长。\n④扶手脚踏板与平台间隙太大，上车时不小心脚可能会卡进踏板与平台间隙，导致脚骨折。 有安全隐患。\n⑤驾驶室后盖板边角与螺栓干涉，建议将板往下折。",
+    "responder": "10001",
+    "responderName": "邹云川，汤连涛，方玉玉",
+    "faultLocation": "1.常熟达德+右门+SY365金矿专机\n\n\n\n\n\n3-③：后处理支架固定螺栓\n\n\n\n\n\n\n",
+    "isCountermeasured": "",
+    "partStatus": "",
+    "riskAssessment": "",
+    "rootCause": "",
+    "temporaryCountermeasure": "",
+    "longTermCountermeasure": "1.制造焊接不良，加强质量监管；\n2.上水管卡箍，在海绵内部，该处粘贴，海绵会有微小突起。\n3.选用螺栓较长",
+    "isClosed": false,
+    "investigator": "10001",
+    "investigatorName": "空",
+    "photos": []
+  },
+  {
+    "id": 4,
     "category": "国际故障",
     "meetingDate": "2026-04-10",
     "serviceEngineer": "蒋斌",
@@ -28,7 +109,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 2,
+    "id": 5,
     "category": "国内投诉",
     "meetingDate": "2026-04-10",
     "serviceEngineer": "李红忠",
@@ -55,7 +136,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 3,
+    "id": 6,
     "category": "国内故障",
     "meetingDate": "2026-04-13",
     "serviceEngineer": "杨杉杉",
@@ -82,7 +163,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 4,
+    "id": 7,
     "category": "国内故障",
     "meetingDate": "2026-04-13",
     "serviceEngineer": "杨扛",
@@ -109,7 +190,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 5,
+    "id": 8,
     "category": "国内故障",
     "meetingDate": "2026-04-13",
     "serviceEngineer": "颜杰",
@@ -136,7 +217,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 6,
+    "id": 9,
     "category": "国内故障",
     "meetingDate": "2026-04-13",
     "serviceEngineer": "后建国",
@@ -163,7 +244,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 7,
+    "id": 10,
     "category": "国内故障",
     "meetingDate": "2026-04-13",
     "serviceEngineer": "刘定伟",
@@ -190,7 +271,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 8,
+    "id": 11,
     "category": "特别话题",
     "meetingDate": "2026-04-13",
     "serviceEngineer": "/",
@@ -217,7 +298,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 9,
+    "id": 12,
     "category": "特别话题",
     "meetingDate": "2026-04-13",
     "serviceEngineer": "",
@@ -244,7 +325,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 10,
+    "id": 13,
     "category": "国际故障",
     "meetingDate": "2026-04-13",
     "serviceEngineer": "冷柯江",
@@ -271,7 +352,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 11,
+    "id": 14,
     "category": "国际故障",
     "meetingDate": "2026-04-13",
     "serviceEngineer": "易琦",
@@ -298,7 +379,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 12,
+    "id": 15,
     "category": "国内故障",
     "meetingDate": "2026-04-13",
     "serviceEngineer": "陈云",
@@ -325,7 +406,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 13,
+    "id": 16,
     "category": "国际故障",
     "meetingDate": "2026-04-14",
     "serviceEngineer": "钟鼎",
@@ -352,7 +433,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 14,
+    "id": 17,
     "category": "国际故障",
     "meetingDate": "2026-04-14",
     "serviceEngineer": "冷柯江",
@@ -379,7 +460,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 15,
+    "id": 18,
     "category": "国内投诉",
     "meetingDate": "2026-04-14",
     "serviceEngineer": "彭镇涛",
@@ -406,7 +487,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 16,
+    "id": 19,
     "category": "国内故障",
     "meetingDate": "2026-04-15",
     "serviceEngineer": "张纪舜",
@@ -433,7 +514,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 17,
+    "id": 20,
     "category": "国内故障",
     "meetingDate": "2026-04-15",
     "serviceEngineer": "郝志鹏",
@@ -460,7 +541,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 18,
+    "id": 21,
     "category": "国内故障",
     "meetingDate": "2026-04-15",
     "serviceEngineer": "杨甲兴",
@@ -487,7 +568,7 @@ const faultData = [
     "photos": []
   },
   {
-    "id": 19,
+    "id": 22,
     "category": "国内故障",
     "meetingDate": "2026-04-15",
     "serviceEngineer": "刘旭东",
