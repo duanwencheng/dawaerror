@@ -1016,10 +1016,9 @@ onUnmounted(() => {
 
 .control-btn {
   pointer-events: auto;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
+  width: 40px;
+  height: 40px;
+  background: transparent;
   color: white;
   display: flex;
   align-items: center;
@@ -1027,10 +1026,12 @@ onUnmounted(() => {
   margin: 20px;
   font-size: 24px;
   transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
 }
 
 .control-btn:hover {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.3);
   transform: scale(1.1);
 }
 
