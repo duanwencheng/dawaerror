@@ -168,6 +168,11 @@ import { Refresh, Plus } from '@element-plus/icons-vue'
 import Layout from '../components/Layout.vue'
 import faultData from '../data/faultData.js'
 
+// 导入轮播图片
+import img1 from '../assets/2.png'
+import img2 from '../assets/3-1.png'
+import img3 from '../assets/3-2.png'
+
 const router = useRouter()
 const currentDate = ref(new Date().toLocaleDateString('zh-CN'))
 const lastUpdateTime = ref(new Date().toLocaleTimeString('zh-CN'))
@@ -185,17 +190,17 @@ const faults = ref(faultData.slice(0, 3))
 // 轮播图片数据
 const carouselImages = ref([
   {
-    src: '/src/assets/2.png',
+    src: img1,
     alt: '故障图片1',
     caption: '支重轮螺栓损坏'
   },
   {
-    src: '/src/assets/3-1.png',
+    src: img2,
     alt: '故障图片2',
     caption: '侧门焊点凹凸不平'
   },
   {
-    src: '/src/assets/3-2.png',
+    src: img3,
     alt: '故障图片3',
     caption: '驾驶室后盖板边角与螺栓干涉，将板往下折'
   }
